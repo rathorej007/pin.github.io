@@ -1,0 +1,33 @@
+<%- include ./partiles/header.ejs  %>
+
+
+<div class="w-full  bg-zinc-800 px-10 py-8 text-white">
+<div class="cards flex flex-wrap gap-10">
+    <% 
+    posts.forEach(function(ele){ %>
+        <span>
+        <div class="card w-52">
+            <a href="show/<%- ele._id %>">
+        <div class="card w-full h-full  bg-sky-200 rounded-lg overflow-hidden">
+        <img class="w-full h-full object-cover" src="images/uploads/<%- ele.image %>" alt="">        
+        </div>
+        </a
+        <h5 class="mt-2 text-xs"><%- ele.title %></h5> 
+        <%
+         if(user.username != ele.user.username){
+         %>
+        <a href="user-profile/<%- ele.user.username %>"><h6 class="text-xs font-semibold mt-1 opacity-500">@<%- ele.user.username %> </h6></a>
+        <% }
+        else{ %>
+        <a href="/profile"><h6 class="text-xs font-semibold mt-1 opacity-500">@<%- ele.user.username %> </h6></a>
+        <% } %>
+</div>
+        </span>
+<%})
+%>
+
+</div>
+</div>
+
+
+<%- include ./partiles/footer.ejs  %>

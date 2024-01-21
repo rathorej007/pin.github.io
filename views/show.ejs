@@ -1,0 +1,31 @@
+<%- include ./partiles/header.ejs  %>
+
+
+<div class="w-full h-full bg-zinc-800 px-10 py-8 text-white">
+<div class="cards flex flex-wrap gap-10">
+    <% 
+    if(user.posts.length > 0){
+    user.posts.forEach(function(ele){ %>
+
+<div class="card w-40">
+    <a href="<%- ele._id %>">
+    <div class="card w-full   bg-sky-200 rounded-lg overflow-hidden">
+        <img class="w-full h-full object-cover" src="http://localhost:3000/images/uploads/<%- ele.image %>" alt="">        
+        </div>
+        <h5 class="mt-2 text-xs"><%- ele.title %></h5>
+    </a>
+</div>
+
+<%})
+}
+else {
+    %>
+    <h2 class="w-full text-center">No Data</h2>
+<%}
+%>
+
+</div>
+</div>
+
+
+<%- include ./partiles/footer.ejs  %>

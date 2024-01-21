@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pin,</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+
+  <% if(currentUser){ %>
+    <div class="w-full px-10 py-3 flex justify-between bg-zinc-800 text-white items-center relative ">
+      <h3>Pinterest</h3>
+      <div class="flex gap-10 items-center ">
+        <a href="/profile">Profile</a>
+        <a href="/feed">Feed</a>
+        <a href="javascript:void(0)" id="messagebtn">Message</a>
+        <a class="px-3 py-2 bg-red-700 text-white rounded-lg" href="/logout">Logout</a>
+
+      </div>
+
+    </div>
+
+    <div
+      class="absolute bg-white right-0 w-[25%] h-[90%] text-black overflow-hidden mt-5 z-[10] overflow-scroll rounded "
+      id="messagediv" style="position: fixed;display: none;">
+      <h2 class="text-center font-semibold px-2 pt-2">Inbox </h2>
+      <input type="hidden" value="<%-  currentUser.username %>" id="currentuser">
+      <div class="card mt-2">
+        <div class="bg-red">
+          <div class="flex flex-col" style="cursor: pointer;">
+            <% if(userMessage.finaluniquemessage.length> 0){
+              userMessage.finaluniquemessage.forEach(function(finalmess){
+              if(finalmess.senderid.username == currentUser.username || finalmess.receiverid.username ==
+              currentUser.username){
+              if(finalmess.senderid.username != currentUser.username){
+              var data = finalmess.senderid.username;
+              var profile = finalmess.senderid.profileimage;
+              var reciverdata = finalmess.senderid._id;
+              }
+              else if(finalmess.receiverid.username != currentUser.username){
+              data = finalmess.receiverid.username;
+              profile = finalmess.receiverid.profileimage;
+              reciverdata = finalmess.receiverid._id;
+              }
+              %>
+              <a href="javscript:void(0)" class="getDataBtn" data-message-id="<%- reciverdata %>">
+
+                <div class=" flex flex-wrap mt-4 mx-5 bg-zinc-200 rounded">
+
+                  <div class="w-20 h-20  rounded-full overflow-hidden mx-5  m-1">
+                    <% if(profile !=null){ %>
+                      <img src="http://localhost:3000/images/uploads/<%- profile %>" alt="">
+                      <% } else { %>
+                        <img src="http://localhost:3000/images/uploads/avatar.jpg" alt="">
+                        <%} %>
+
+                  </div>
+
+                  <div class="px-5 py-5">
+                    <!-- <%- finalmess.message_id %> -->
+                    <h4><%- data %></h4>
+                    <% if (finalmess && finalmess.createdAt) { %>
+                      <% const messageDate=new Date(finalmess.createdAt); %>
+                        <% const currentDate=new Date(); %>
+                          <% const timeDifference=Math.floor((currentDate - messageDate) / (1000 * 60 * 60)); %>
+                            <p><%- finalmess.message.substr(0,4) %><span>.<%= timeDifference %> hr</span></p>
+                            <% } %>
+
+
+                  </div>
+                </div>
+              </a>
+              <%} }); } else { %>
+                <span class="text-center mt-2">No Message Found</span>
+                <%} %>
+
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- <button id="getDataBtn">Get Data</button> -->
+
+    <div id="dataDisplay">
+      <div
+        class="absolute bg-white right-0 w-[25%] h-[90%] text-black overflow-hidden mt-5 z-[10] overflow-scroll rounded py-5 postionset"
+        id="fullmessgae" style="width: 422px;position: fixed;display: none;">
+        <a style="position: fixed;" href="javascript:void(0)"><i class="ri-arrow-left-s-line text-xl"
+            style="font-size: 40px" id="backmessage"></i></a>
+        <h2 class="usernamename text-center font-semibold px-2 pt-2"></h2>
+        <h2 class="text-center font-semibold px-2 pt-2" id="username"></h2>
+
+        <div class="card mt-2 ">
+          <div class="bg-white">
+
+            <div class="" style="margin-bottom: 5%;height: 5%;">
+              <div class="userconversation">
+                <div class="flex flex-wrap mt-6">
+                  <!-- <div class="firstside ">
+        <div id="mainuser" class="w-10 h-10  rounded-full overflow-hidden mx-5 ">
+         <img src="http://localhost:3000/images/uploads/3751fe37-2d50-43f7-a2c6-a4d3bdacaa17.jpg" alt="">
+        </div>
+         </div>
+         <div class="paramessage bg-zinc-200 p-2 overflow-hidden w-[50%] rounded-lg">
+        <p class="break-all"></p>
+
+        </div> -->
+
+                  <div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="userconversation " style="margin-left: 50%;">
+                <div class="flex flex-wrap mt-6" id="secnondconverp">
+
+
+
+                  <div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="flex flex-col mt-5" style="cursor: pointer;">
+              <form action="/send-message" method="post">
+                <div class="messagebox  bottom-0 flex justify-center " style="position: fixed;">
+                  <input type="hidden" name="message_id" id="message_id">
+                  <input type="hidden" name="userid" class="senduserid">
+                  <input style="outline:none" type="text" class=" mt-3 ml-16 border border-zinc-200 rounded-full p-5"
+                    id="messageinput" placeholder="Send a Message" name="message" id="message">
+                  <button class="px-6 rounded-full "><img src="images/uploads/down.png" alt=""></button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <script>
+
+
+
+
+      var userdata = document.querySelectorAll('.getDataBtn');
+
+      userdata.forEach(function (userdatas) {
+
+        userdatas.addEventListener('click', async (event) => {
+
+
+          const messageId = event.currentTarget.dataset.messageId;
+          document.querySelector('#fullmessgae').style.display = 'block';
+          document.querySelector('#messagediv').style.display = 'none';
+
+          const id = messageId; // Replace with the ID you want to send
+          const response = await fetch(`/getData/${id}`);
+          const { data } = await response.json();
+          console.log({ data });
+          displayData(data);
+        });
+      });
+
+
+      function displayData(dataArray) {
+        const dataDisplay = document.getElementById('username');
+        const mainuser = document.getElementById('mainuser');
+        const paramessage = document.querySelector('.paramessage');
+
+        const currentuser = document.querySelector('#currentuser').value;
+        console.log(dataArray);
+        // Display the retrieved data
+        dataArray.forEach(data => {
+          const dataDisplay = document.getElementById('username');
+
+
+
+          const userDisplay = document.createElement('div');
+          userDisplay.classList = 'newdiv';
+
+          if (data.senderid.username != currentuser) {
+            document.querySelector('.senduserid').value = data.senderid._id;
+            document.querySelector('.usernamename').innerHTML = data.senderid.username;
+            document.querySelector('#message_id').value = data.message_id;
+
+            console.log(data.senderid.username);
+            userDisplay.innerHTML = `
+
+    <div class="flex flex-wrap mt-6">
+      <a href='/user-profile/${data.senderid.username}'>
+         <div class="firstside ">
+        <div id="mainuser" class="w-10 h-10  rounded-full overflow-hidden mx-5 ">
+          <img  src='images/uploads/${data.senderid.profileimage}' alt='${data.username}' style='width:50px'>
+        </div>
+         </div>
+         </a>
+         <div class="paramessage bg-zinc-200 p-2 overflow-hidden w-[50%] rounded-lg" id='${data.message.substr(0, 4)}'>
+          <p class="whitespace-pre-line break-all">${data.message}</p
+        </div>
+         <div>
+         </div>
+       </div>
+    `;
+          }
+          else {
+            console.log(data.senderid.username);
+            document.querySelector('.senduserid').value = data.receiverid._id;
+            document.querySelector('.usernamename').innerHTML = data.receiverid.username;
+            document.querySelector('#message_id').value = data.message_id;
+
+
+            userDisplay.innerHTML = `<div class="flex flex-wrap mt-6" style='margin-left:25%'>
+        
+         <div class="paramessage bg-zinc-200 p-2 overflow-hidden w-[50%] rounded-lg"  id='${data.message.substr(0, 4)}'>
+          <p class="whitespace-pre-line break-all">${data.message}</p>
+        </div>
+       
+        <div class="firstside ">
+        <div id="mainuser" class="w-10 h-10  rounded-full overflow-hidden mx-5 ">
+          <img  src='images/uploads/${data.senderid.profileimage}' alt='${data.username}' style='width:50px'>
+        </div>
+         </div>
+       
+         <div>
+         </div>
+       </div>`;
+          }
+          dataDisplay.appendChild(userDisplay);
+        });
+
+
+        var scrollableDiv = document.querySelector('.postionset');
+        scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+
+        senddata.forEach(data => {
+          console.log(data);
+          var secnondconverp = document.querySelector('#secnondconverp');
+          secnondconverp.classList = 'newdiv';
+          secnondconverp.innerHTML += `
+    <div class='flex flex-wrap mt-2' >
+      <div class="paramessage bg-zinc-200 p-2 overflow-hidden w-[50%] rounded-lg" id='${data.message.substr(0, 4)}'>
+          <p class="whitespace-pre-line break-all">${data.message}</p>
+
+
+        </div>
+
+  <div class="firstside ">
+      <div id="mainuser" class="w-10 h-10  rounded-full overflow-hidden mx-5 ">
+        <img  src='images/uploads/${data.receiverid.profileimage}' alt='${data.username}' style='width:50px'>
+      </div>
+        </div>
+        </div>
+    `;
+        });
+
+
+
+
+
+      }
+    </script>
+
+    <script>
+
+      document.querySelector('#messagebtn').addEventListener('click', function () {
+        var messageDiv = document.querySelector('#messagediv');
+        document.querySelector('#fullmessgae').style.display = 'none';
+
+        var dataDisplay = document.getElementById('username');
+        dataDisplay.innerHTML = '';
+
+        if (messageDiv.style.display === 'none' || messageDiv.style.display === '') {
+          // Show the message div with slide animation
+          messageDiv.style.display = 'block';
+          messageDiv.style.width = '0';
+          messageDiv.style.transition = 'width 0.5s ease';
+          setTimeout(function () {
+            messageDiv.style.width = '400px'; // Change width as needed
+          }, 50); // Delay to allow transition to take effect
+        } else {
+          // Hide the message div with slide animation
+          messageDiv.style.width = '0';
+          setTimeout(function () {
+            messageDiv.style.display = 'none';
+          }, 500); // Same duration as transition time
+        }
+      });
+
+      document.querySelector('#backmessage').addEventListener('click', function (event) {
+        var dataDisplay = document.getElementById('username');
+        dataDisplay.innerHTML = '';
+
+        document.querySelector('#fullmessgae').style.display = 'none';
+        var messageDiv = document.querySelector('#messagediv');
+        if (messageDiv.style.display === 'none' || messageDiv.style.display === '') {
+          // Show the message div with slide animation
+          messageDiv.style.display = 'block';
+
+        } else {
+          // Hide the message div with slide animation
+          messageDiv.style.width = '0';
+          setTimeout(function () {
+            messageDiv.style.display = 'none';
+          }, 500); // Same duration as transition time
+
+
+        }
+
+      })
+
+
+
+      document.querySelector('#messageinput').addEventListener('click', function () {
+
+        document.querySelector('#messageinput').style.border = '1px solid #0ba9f9';
+
+      })
+
+
+    </script>
+    <% }%>

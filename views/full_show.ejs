@@ -1,0 +1,113 @@
+<%- include ./partiles/header.ejs  %>
+
+
+<div class="w-full h-[auto]   bg-zinc-800 px-10 py-8 text-white ">
+<div class="cards flex flex-wrap  items-center justify-center mt-20 ">
+   
+    <div class="card w-[70%] mt-10 bg-white h-full flex flex-wrap">
+
+        <div class="w-full md:w-1/2 rounded-lg overflow-hidden">
+            <img class="w-full  object-cover" src="http://localhost:3000/images/uploads/<%- post.image %>" alt="">        
+        </div>
+
+       
+        
+        <div class="w-full md:w-1/2 p-4 text-black relative">
+            <h1 class="mt-2 font-semibold"><%- post.title %></h1>
+            <p><%- post.description %></p>
+
+            <div>
+                <% comment.forEach(function(comments) { %>
+
+                <div class="cards flex flex-wrap h-full mb-5 mt-5 ">
+                    <div class="w-[10%] rounded-full overflow-hidden">
+                        <%
+                        if(userdata.username != comments.user.username ){
+                         %>
+                        <a href="/user-profile/<%- comments.user.username %>"><img class="object-cover rounded-full" src="http://localhost:3000/images/uploads/<%- comments.user.profileimage %>" alt=""></a>
+                        <% }
+                        else{
+                            %>
+                            <a href="/profile %>"><img class="object-cover rounded-full" src="http://localhost:3000/images/uploads/<%- comments.user.profileimage %>" alt=""></a>
+                        <%}
+                        %>
+                    </div>   
+                    <form action="/follow/<%- comments.user._id %>" method="post">
+
+                        <input type="hidden" name="post_id"  value="<%- post._id %>">
+                        <div class="two text-black p-1">
+                            <span class="text-sm block">@<%- comments.user.username %>
+                                <% 
+                                if(userdata.username != comments.user.username ){
+                                if (!userdata.following.includes(comments.user._id)){
+                                %>
+                                <button type="submit" class="follow  p-1 bg-sky-700  text-white rounded-md">Follow</button> 
+                                <% 
+                               } 
+                               else{
+                                %>
+                                <button type="submit" class="follow  p-1 bg-sky-700  text-white rounded-md">unfollow</button> 
+                                
+                               <%} 
+                               }
+                               %>
+                                </span>
+                            <p class="mt-1"><%- comments.comment %></p>
+                        </div>
+                    </form>
+                </div>
+                <% 
+            });
+                %>
+            </div>
+
+           <form action="/addcomment" method="post" class="mt-10 mb-10">
+            <input type="text" name="pin_id" hidden   value="<%- post._id  %>">
+            <input class="block px-3 py-2 mt-2 bg-red-700  rounded-md text-white absolute right-12 bottom-0 hidden" id="commentbtn" type="submit" value="Add">
+            <input type="text" id="comment" name="comment" placeholder="Add a Comment" class="block text-black w-[70%] px-3 py-2 border-2 mt-2  rounded-md bottom-0 absolute">
+           </form>
+        </div>
+    
+    </div> 
+
+</div>
+</div>
+
+
+
+
+<script>
+
+var input = document.querySelector('#comment').addEventListener('keyup',function(){
+    var text = this.value;
+    var textLength = text.length;
+    if (textLength > 0) {
+    document.querySelector('#commentbtn').style.display = 'block';
+    } else {
+    document.querySelector('#commentbtn').style.display = 'none';
+    }
+})
+
+
+
+var followerbtn = document.querySelectorAll('.follow');
+
+followerbtn.forEach(function(follow){
+    var check = 0;
+    follow.addEventListener('click',function(){
+        if(check == 0){
+            follow.innerHTML = 'Followed';
+            check = 1;
+        }
+        else {
+            follow.innerHTML='follow';
+            check=0;
+        }
+    })
+
+});
+
+
+</script>
+
+<%- include ./partiles/footer.ejs  %>
