@@ -32,7 +32,9 @@
       <div class="card mt-2">
         <div class="bg-red">
           <div class="flex flex-col" style="cursor: pointer;">
-            <% if(userMessage.finaluniquemessage.length> 0){
+            <% 
+            if(userMessage.finaluniquemessage){
+            if(userMessage.finaluniquemessage.length> 0){
               userMessage.finaluniquemessage.forEach(function(finalmess){
               if(finalmess.senderid.username == currentUser.username || finalmess.receiverid.username ==
               currentUser.username){
@@ -76,7 +78,11 @@
               </a>
               <%} }); } else { %>
                 <span class="text-center mt-2">No Message Found</span>
-                <%} %>
+                <%}} 
+                else {
+                %>
+                <span class="text-center mt-2">No Message Found</span>
+                <% }%>
 
 
 
