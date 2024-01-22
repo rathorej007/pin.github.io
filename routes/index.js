@@ -79,7 +79,7 @@ res.render('show',{user});
 
 })
 
-router.get('/feed',  async function(req,res){
+router.get('/feed',isloggedin, async function(req,res){
   var user =  await userModel.findOne({username:req.session.passport.user}).sort({ _id: -1 });
   var posts = await postModel.find()
               .populate('user')
@@ -146,7 +146,7 @@ function isloggedin(req,res,next){
 }
 
 
-router.get('/show/:id', async (req,res)=>{
+router.get('/show/:id',isloggedin, async (req,res)=>{
   
   var id = req.params.id
   const post = await postModel.findOne({ _id: id })
@@ -207,7 +207,7 @@ router.post('/follow/:userId', isloggedin, async (req , res) => {
  
 });
 
-router.get('/user-profile/:id', async (req, res) => {
+router.get('/user-profile/:id', isloggedin,async (req, res) => {
   try {
     const requestedUserId = req.params.id;
     const loggedInUserId = req.session.passport.user;
@@ -246,7 +246,7 @@ router.get('/message',(req,res)=>{
 
 })
 
-router.post('/send-message', async (req,res)=>{
+router.post('/send-message',isloggedin, async (req,res)=>{
    
  try{
 
@@ -275,7 +275,7 @@ router.post('/send-message', async (req,res)=>{
  }
 });
 
-router.get('/getData/:username', async (req, res) => {
+router.get('/getData/:username',isloggedin, async (req, res) => {
   const username = req.params.username;
   try {
     const userData = await userModel.findById(username);
